@@ -1,0 +1,547 @@
+/* style.css */
+
+/* --- CSS Variables for Theme (Light and Dark) --- */
+:root {
+    /* Light Mode Defaults */
+    --background-color: #f0f2f5; /* Page background */
+    --surface-color: #ffffff; /* Color for cards, chat containers, input areas */
+    --text-color: #1f2833;
+    --primary-color: #075e54; /* Green for primary actions, navbar, sent messages */
+    --primary-dark-color: #054d44; /* Darker green for hover */
+    --secondary-color: #34b7f1; /* Blue for secondary actions */
+    --border-color: #cccccc; /* Standard border color */
+    --light-bubble-color: #dcf8c6; /* Light green for sent messages background */
+    --received-bubble-color: #ffffff; /* White for received messages background */
+    --button-text-color: white; /* Text color for primary buttons */
+    --sidebar-width: 280px;
+}
+
+body.dark-mode {
+    /* Dark Mode Overrides */
+    --background-color: #1a202c;
+    --surface-color: #2d3748;
+    --text-color: #e2e8f0;
+    --primary-color: #48bb78; /* Dark mode green */
+    --primary-dark-color: #38a169;
+    --secondary-color: #63b3ed; /* Dark mode blue */
+    --border-color: #4a5568;
+    --light-bubble-color: var(--primary-color); /* Sent messages use primary color in dark mode */
+    --received-bubble-color: var(--surface-color); /* Received messages use surface color */
+    --button-text-color: var(--text-color); /* Adjust button text color for dark mode */
+}
+
+/* --- General Body Styling --- */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: var(--background-color);
+    margin: 0;
+    padding-top: 60px; /* Space for the fixed navbar */
+    transition: background-color 0.3s ease, color 0.3s ease;
+    color: var(--text-color);
+    line-height: 1.6;
+    min-height: 100vh; /* Ensure body takes at least full viewport height */
+    box-sizing: border-box; /* Include padding/border in height calculation */
+}
+
+/* --- Navbar Styling --- */
+.navbar {
+    background-color: var(--primary-color);
+    color: white; /* Default text color for navbar */
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: fixed; /* Keep navbar at the top */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 60px; /* Fixed height for the navbar */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    z-index: 1000; /* Ensure navbar is on top of other content */
+    box-sizing: border-box;
+    transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.navbar-left h2 {
+    margin: 0;
+    color: white; /* Title color in navbar */
+    font-size: 1.5em;
+    transition: color 0.3s ease;
+}
+
+.navbar-right {
+    display: flex;
+    align-items: center;
+}
+
+.navbar-right span { /* User name display */
+    margin-right: 15px;
+    font-size: 1.1em;
+    font-weight: bold;
+    transition: color 0.3s ease;
+}
+
+/* Styling for navbar buttons */
+.nav-button {
+    background-color: transparent;
+    color: white;
+    border: 1px solid white;
+    padding: 8px 15px;
+    margin-left: 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9em;
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+.nav-button:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* --- Dark Mode Styles for Navbar --- */
+body.dark-mode .navbar {
+    background-color: var(--surface-color);
+    color: var(--text-color);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+body.dark-mode .navbar-left h2 {
+    color: var(--text-color);
+}
+body.dark-mode .navbar-right span {
+    color: var(--text-color);
+}
+body.dark-mode .nav-button {
+    color: var(--text-color);
+    border-color: var(--border-color);
+}
+body.dark-mode .nav-button:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+/* --- Layout for the main dashboard area (Sidebar + Main Content) --- */
+.dashboard-container {
+    display: flex; /* Use flexbox for sidebar and main content */
+    height: calc(100vh - 60px); /* Full height minus navbar height */
+    /* Make sure this height calculation is correct based on your navbar height */
+}
+
+/* Sidebar width and basic styling */
+.sidebar {
+    width: var(--sidebar-width); /* Use CSS variable or default */
+    background-color: var(--surface-color);
+    border-right: 1px solid var(--border-color);
+    padding: 15px;
+    overflow-y: auto; /* Enable scrolling in sidebar */
+    flex-shrink: 0; /* Prevent sidebar from shrinking */
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+    display: flex; /* Arrange items in a column */
+    flex-direction: column;
+}
+
+/* Main content area styling (for the chat interface) */
+.main-content {
+    flex-grow: 1; /* Take remaining space */
+    padding: 15px;
+    overflow-y: auto; /* Enable scrolling in main content */
+    display: flex; /* Stack chat elements vertically */
+    flex-direction: column;
+    background-color: var(--background-color);
+    transition: background-color 0.3s ease;
+    /* max-width: 800px;  Remove max-width and margin:auto if sidebar is fixed width */
+    /* margin: 0 auto; */
+    box-sizing: border-box;
+}
+
+/* --- Styling for sections within the Sidebar --- */
+.search-area {
+    display: flex;
+    margin-bottom: 10px; /* Adjusted margin */
+    gap: 5px; /* Space between input and button */
+}
+
+.search-area input[type="text"] {
+    flex-grow: 1;
+    padding: 8px; /* Adjusted padding */
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    font-size: 1em;
+    background-color: var(--surface-color);
+    color: var(--text-color);
+    transition: border-color 0.3s ease, background-color 0.3s ease, color 0.3s ease;
+    outline: none; /* Remove outline on focus */
+}
+
+.search-area button {
+    padding: 8px 12px;
+    border: 1px solid var(--primary-color); /* Use primary color for button */
+    background-color: var(--primary-color);
+    color: white;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1em;
+    transition: background-color 0.3s ease;
+}
+
+.search-area button:hover {
+    background-color: var(--primary-dark-color);
+}
+
+/* Dark mode for search input */
+body.dark-mode .search-area input[type="text"] {
+     border-color: var(--border-color);
+}
+body.dark-mode .search-area button {
+     border-color: var(--primary-color);
+     background-color: var(--primary-color);
+     color: white;
+}
+body.dark-mode .search-area button:hover {
+    background-color: var(--primary-dark-color);
+}
+
+
+/* Styling for all list containers (Friends, Search Results) */
+.list {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 15px 0;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    background-color: var(--surface-color);
+    transition: border-color 0.3s ease, background-color 0.3s ease;
+}
+
+/* Styling for individual items in lists */
+.list-item {
+    padding: 10px;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    color: var(--text-color);
+}
+
+.list-item:last-child {
+    border-bottom: none;
+}
+
+.list-item:hover {
+    background-color: var(--list-item-hover);
+}
+
+.list-item span {
+    flex-grow: 1;
+    margin-right: 10px;
+    word-break: break-word;
+}
+
+
+/* --- Button Styling for list items (Add Friend, Chat) --- */
+.list-item button {
+    padding: 5px 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9em;
+    margin-left: 5px;
+    transition: background-color 0.3s ease;
+    color: var(--button-text-color); /* Use button text color */
+}
+
+.list-item .add-button {
+    background-color: var(--primary-color);
+}
+.list-item .add-button:hover {
+    background-color: var(--primary-dark-color);
+}
+
+.list-item .chat-button {
+    background-color: var(--secondary-color); /* Blue for chat button */
+}
+.list-item .chat-button:hover {
+    background-color: #2b8cdb; /* Darker blue */
+}
+
+
+/* --- Chat Interface Styling (within main-content) --- */
+.chat-container {
+    flex-grow: 1; /* Make the chat area fill available space within main-content */
+    background-color: var(--surface-color);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column; /* Stack header, messages, input vertically */
+    overflow: hidden; /* Hide overflowing messages */
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05); /* Subtle shadow */
+}
+
+#chat-header {
+    padding: 10px 15px;
+    border-bottom: 1px solid var(--border-color);
+    background-color: var(--surface-color);
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+#chat-header h2 {
+     margin: 0;
+     font-size: 1.3em;
+     color: var(--text-color);
+     transition: color 0.3s ease;
+}
+
+#chat-messages-list {
+    flex-grow: 1; /* Allow messages area to take available space */
+    overflow-y: auto; /* Enable scrolling for messages */
+    padding: 15px;
+    background-color: var(--background-color);
+    border-radius: 4px;
+    display: flex;
+    flex-direction: column; /* Stack messages vertically */
+    transition: background-color 0.3s ease;
+}
+
+.chat-message {
+    margin-bottom: 8px;
+    padding: 8px 12px;
+    border-radius: 15px; /* Rounded corners for message bubbles */
+    max-width: 70%; /* Limit message bubble width */
+    word-wrap: break-word; /* Break long words */
+    line-height: 1.4;
+    font-size: 0.95em;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.chat-message p {
+    margin: 0;
+    padding: 0;
+}
+
+.chat-message .timestamp {
+    display: block;
+    font-size: 0.7em;
+    color: #888;
+    text-align: right;
+    margin-top: 4px;
+    transition: color 0.3s ease;
+}
+
+.chat-message.sent {
+    align-self: flex-end; /* Align to the right */
+    background-color: var(--light-bubble-color);
+    color: var(--text-color);
+}
+
+.chat-message.received {
+    align-self: flex-start; /* Align to the left */
+    background-color: var(--received-bubble-color);
+    color: var(--text-color);
+    border: 1px solid var(--border-color);
+}
+
+
+#message-input-area {
+    display: flex;
+    gap: 10px;
+    padding: 10px 15px;
+    border-top: 1px solid var(--border-color);
+    background-color: var(--surface-color);
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+#message-input {
+    flex-grow: 1;
+    padding: 10px;
+    border: 1px solid var(--border-color);
+    border-radius: 20px;
+    font-size: 1em;
+    background-color: var(--surface-color);
+    color: var(--text-color);
+    outline: none;
+    transition: border-color 0.3s ease, background-color 0.3s ease, color 0.3s ease;
+}
+
+#message-input:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+
+#send-message-button {
+    padding: 10px 20px;
+    background-color: var(--primary-color);
+    color: var(--button-text-color);
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 1em;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+#send-message-button:hover {
+    background-color: var(--primary-dark-color);
+}
+
+#send-message-button:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+}
+
+.empty-state {
+    text-align: center;
+    color: var(--text-color);
+    opacity: 0.7;
+    font-style: italic;
+    padding: 15px;
+    transition: color 0.3s ease, opacity 0.3s ease;
+}
+
+
+
+body.dark-mode .navbar {
+    background-color: var(--surface-color);
+    color: var(--text-color);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+body.dark-mode .navbar-left h2 {
+    color: var(--text-color);
+}
+body.dark-mode .navbar-right span {
+    color: var(--text-color);
+}
+body.dark-mode .nav-button {
+    color: var(--text-color);
+    border-color: var(--border-color);
+}
+body.dark-mode .nav-button:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+
+body.dark-mode .sidebar {
+    background-color: var(--surface-color);
+    border-right-color: var(--border-color);
+}
+body.dark-mode .main-content {
+    background-color: var(--background-color);
+}
+body.dark-mode .search-area input[type="text"] {
+    background-color: var(--surface-color);
+    border-color: var(--border-color);
+    color: var(--text-color);
+}
+body.dark-mode .search-area button {
+     background-color: var(--primary-color);
+     border-color: var(--primary-color);
+}
+body.dark-mode .search-area button:hover {
+    background-color: var(--primary-dark-color);
+}
+body.dark-mode .list {
+    background-color: var(--surface-color);
+    border-color: var(--border-color);
+}
+body.dark-mode .list-item {
+    border-bottom-color: var(--border-color);
+    color: var(--text-color);
+}
+body.dark-mode .list-item:hover {
+    background-color: var(--list-item-hover);
+}
+body.dark-mode .list-item button {
+    color: var(--button-text-color); /* Should already be handled by var() */
+}
+body.dark-mode .list-item .add-button {
+    background-color: var(--primary-color);
+}
+body.dark-mode .list-item .add-button:hover {
+    background-color: var(--primary-dark-color);
+}
+body.dark-mode .list-item .chat-button {
+    background-color: var(--secondary-color);
+}
+body.dark-mode .list-item .chat-button:hover {
+    background-color: #2b8cdb;
+}
+
+/* Chat-specific dark mode overrides */
+body.dark-mode .chat-container {
+    background-color: var(--surface-color);
+    border-color: var(--border-color);
+}
+body.dark-mode #chat-header {
+    background-color: var(--surface-color);
+    border-bottom-color: var(--border-color);
+}
+body.dark-mode #chat-header h2 {
+    color: var(--text-color);
+}
+body.dark-mode #chat-messages-list {
+    background-color: var(--background-color);
+}
+body.dark-mode .chat-message.sent {
+    background-color: var(--light-bubble-color);
+    color: var(--text-color);
+}
+body.dark-mode .chat-message.received {
+    background-color: var(--received-bubble-color);
+    color: var(--text-color);
+    border: 1px solid var(--border-color);
+}
+body.dark-mode .chat-message .timestamp {
+    color: var(--text-color);
+    opacity: 0.8;
+}
+body.dark-mode #message-input-area {
+    background-color: var(--surface-color);
+    border-top-color: var(--border-color);
+}
+body.dark-mode #message-input {
+    background-color: var(--surface-color);
+    border-color: var(--border-color);
+    color: var(--text-color);
+}
+body.dark-mode #send-message-button {
+    background-color: var(--primary-color);
+    color: var(--button-text-color);
+}
+body.dark-mode #send-message-button:hover {
+    background-color: var(--primary-dark-color);
+}
+body.dark-mode #send-message-button:disabled {
+     background-color: var(--border-color);
+     color: var(--text-color);
+}
+body.dark-mode .empty-state {
+    color: var(--text-color);
+}
+
+#attach-button {
+ padding: 10px 15px;
+ background-color: transparent;
+ color: var(--primary-color);
+ border: 1px solid var(--primary-color);
+ border-radius: 20px;
+ cursor: pointer;
+ font-size: 1em;
+ transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+#attach-button:hover {
+ background-color: rgba(var(--primary-color-rgb), 0.1); /* Use RGB for opacity */
+ color: var(--primary-dark-color);
+ border-color: var(--primary-dark-color);
+}
+
+body.dark-mode #attach-button {
+ color: var(--secondary-color);
+ border-color: var(--secondary-color);
+}
+
+body.dark-mode #attach-button:hover {
+ background-color: rgba(var(--secondary-color-rgb), 0.1);
+ color: #63b3ed;
+ border-color: #63b3ed;
+}

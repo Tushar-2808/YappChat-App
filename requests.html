@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YappChat - Friend Requests</title>
+     <style>
+       /* styles for requests.html */
+
+/* --- CSS Variables for Theme (Light and Dark) --- */
+:root {
+    /* Light Mode Defaults */
+    --background-color: #f0f2f5;
+    --surface-color: #ffffff; /* Color for cards, lists, etc. */
+    --text-color: #1f2833;
+    --primary-color: #075e54; /* Green for primary actions, navbar */
+    --primary-dark-color: #054d44; /* Darker green for hover */
+    --secondary-color: #34b7f1; /* Blue for secondary actions */
+    --border-color: #cccccc; /* Standard border color */
+    --list-item-hover: #f0f0f0; /* Background on hovering list items */
+    --success-color: #28a745; /* Green for success (Accept button) */
+    --danger-color: #dc3545; /* Red for danger (Reject button) */
+    --warning-color: #ffc107; /* Yellow (Cancel button) */
+}
+
+body.dark-mode {
+    /* Dark Mode Overrides */
+    --background-color: #1a202c;
+    --surface-color: #2d3748;
+    --text-color: #e2e8f0;
+    --primary-color: #48bb78; /* Green */
+    --primary-dark-color: #38a169;
+    --secondary-color: #63b3ed; /* Blue */
+    --border-color: #4a5568;
+    --list-item-hover: #4a5568;
+    --success-color: #38a169; /* Dark mode green */
+    --danger-color: #e53e3e; /* Dark mode red */
+    --warning-color: #f6e05e; /* Dark mode yellow */
+}
+
+/* --- General Body Styling --- */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: var(--background-color);
+    margin: 0;
+    padding-top: 60px; /* Space for the fixed navbar (adjust if navbar height changes) */
+    transition: background-color 0.3s ease, color 0.3s ease; /* Smooth transition for dark mode */
+    color: var(--text-color);
+    line-height: 1.6;
+    min-height: 100vh; /* Ensure body takes at least full viewport height */
+    box-sizing: border-box; /* Include padding/border in height calculation */
+}
+
+/* --- Navbar Styling --- */
+.navbar {
+    background-color: var(--primary-color);
+    color: white; /* Default text color for navbar */
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: fixed; /* Keep navbar at the top */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 60px; /* Fixed height for the navbar */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    z-index: 1000; /* Ensure navbar is on top of other content */
+    box-sizing: border-box;
+    transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease; /* Transition for dark mode */
+}
+
+.navbar-left h2 {
+    margin: 0;
+    color: white; /* Title color in navbar */
+    font-size: 1.5em;
+    transition: color 0.3s ease;
+}
+
+.navbar-right {
+    display: flex;
+    align-items: center;
+}
+
+.navbar-right span { /* User name display */
+    margin-right: 15px;
+    font-size: 1.1em;
+    font-weight: bold;
+    transition: color 0.3s ease;
+}
+
+/* Styling for navbar buttons */
+.nav-button {
+    background-color: transparent;
+    color: white;
+    border: 1px solid white;
+    padding: 8px 15px;
+    margin-left: 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9em;
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+.nav-button:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* --- Dark Mode Styles for Navbar --- */
+body.dark-mode .navbar {
+    background-color: var(--surface-color);
+    color: var(--text-color);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+body.dark-mode .navbar-left h2 {
+    color: var(--text-color);
+}
+body.dark-mode .navbar-right span {
+    color: var(--text-color);
+}
+body.dark-mode .nav-button {
+    color: var(--text-color);
+    border-color: var(--border-color);
+}
+body.dark-mode .nav-button:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+
+/* --- Main Content Area Styling (Specific to requests.html) --- */
+/* This area fills the space below the navbar */
+.main-content {
+    display: block; /* Ensure it behaves as a block, overriding flex if needed */
+    width: 100%; /* Take full width */
+    max-width: 800px; /* Optional: Limit width for readability */
+    margin: 20px auto; /* Add top/bottom margin and center the block */
+    padding: 0 15px; /* Add horizontal padding */
+    overflow-y: auto; /* Enable scrolling if content overflows */
+    box-sizing: border-box;
+    background-color: var(--background-color); /* Match body background */
+    transition: background-color 0.3s ease;
+}
+
+
+/* --- Friend Requests View Styling (Container within main-content) --- */
+.requests-view {
+    /* Style the main container block for requests */
+    background-color: var(--surface-color);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 20px; /* Space below this block */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05); /* Subtle shadow */
+    transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.requests-view h3 {
+     text-align: center;
+     margin-top: 0;
+     margin-bottom: 20px;
+     color: var(--primary-color);
+     border-bottom: 1px solid var(--border-color);
+     padding-bottom: 10px;
+     transition: color 0.3s ease, border-color 0.3s ease;
+}
+
+/* --- Subsection Styling (Incoming/Outgoing) --- */
+.request-subsection {
+    margin-top: 20px; /* Space above each subsection */
+    padding-top: 20px; /* Padding inside subsection above content */
+    border-top: 1px solid var(--border-color); /* Separator line */
+    transition: border-color 0.3s ease;
+}
+
+.request-subsection:first-child {
+    margin-top: 0;
+    padding-top: 0;
+    border-top: none; /* No border on the first subsection */
+}
+
+.request-subsection h4 {
+     margin-top: 0;
+     margin-bottom: 15px; /* Space below heading */
+     color: var(--text-color);
+     transition: color 0.3s ease;
+}
+
+/* --- List Styling (for Incoming/Outgoing lists) --- */
+.list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    /* border: 1px solid var(--border-color); Remove outer border if already on .requests-view or .request-subsection */
+    border-radius: 4px;
+    /* background-color: var(--surface-color); Remove if already on .requests-view */
+}
+
+/* --- List Item Styling --- */
+.list-item {
+    background-color: var(--surface-color); /* Background for each item */
+    border-bottom: 1px solid var(--border-color);
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: default; /* Requests items are not clickable to open chat directly */
+    transition: background-color 0.2s ease, border-color 0.3s ease;
+    color: var(--text-color);
+}
+
+.list-item:last-child {
+    border-bottom: none;
+}
+
+.list-item span {
+    flex-grow: 1;
+    margin-right: 10px;
+    word-break: break-word;
+}
+
+/* --- Empty State Message Styling --- */
+.empty-state {
+    text-align: center;
+    color: var(--text-color); /* Use text color variable */
+    opacity: 0.7; /* Slightly faded */
+    font-style: italic;
+    padding: 15px;
+    transition: color 0.3s ease, opacity 0.3s ease;
+}
+
+/* --- Button Styling within List Items --- */
+.list-item button {
+    padding: 5px 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9em;
+    margin-left: 5px;
+    transition: background-color 0.3s ease;
+    color: white; /* Button text is often fixed white */
+}
+
+.list-item .accept-button {
+    background-color: var(--success-color);
+}
+.list-item .accept-button:hover {
+    background-color: var(--primary-dark-color); /* Use a darker success color or primary-dark */
+    /* background-color: #218838; */
+}
+
+.list-item .reject-button {
+    background-color: var(--danger-color);
+}
+.list-item .reject-button:hover {
+    background-color: #c82333; /* Darker red */
+}
+
+.list-item .cancel-button {
+    background-color: var(--warning-color);
+    color: var(--text-color); /* Warning button text might be dark */
+}
+.list-item .cancel-button:hover {
+    background-color: #e0a800; /* Darker yellow */
+}
+
+
+
+/* Button dark mode colors are handled by var() in their main rules */
+/* body.dark-mode .list-item .accept-button { background-color: var(--success-color); } etc. */
+
+    </style>
+    </head>
+<body>
+
+    <div class="navbar">
+        <div class="navbar-left">
+            <h2>YappChat</h2>
+        </div>
+        <div class="navbar-right">
+            <span id="user-name-display">Loading...</span>
+            <button id="menu-nav-button" class="nav-button">Menu</button>
+            <button id="theme-switch" class="nav-button">Toggle Theme</button>
+            <button id="logout-button" class="nav-button">Logout</button>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <div class="requests-view">
+            <h3>Friend Requests</h3> <div class="request-subsection">
+                 <h4>Incoming</h4> <div id="incoming-requests-list" class="list">
+                     <p class="empty-state">Loading incoming requests...</p>
+                 </div>
+            </div>
+
+            <div class="request-subsection">
+                 <h4>Outgoing</h4> <div id="outgoing-requests-list" class="list">
+                     <p class="empty-state">Loading outgoing requests...</p>
+                 </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="config.js"></script>
+    <script type="module" src="friendrequest.js"></script>
+    <script type="module" src="requests.js"></script>
+
+</body>
+</html>
