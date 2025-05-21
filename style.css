@@ -3,21 +3,22 @@
 /* --- CSS Variables for Theme (Light and Dark) --- */
 :root {
     /* Light Mode Defaults */
-    --background-color: #f0f2f5; /* Page background */
-    --surface-color: #ffffff; /* Color for cards, chat containers, input areas */
+    --background-color: #f0f2f5; /* Global page background */
+    --surface-color: #ffffff; /* Color for cards, chat containers, lists, forms */
     --text-color: #1f2833;
-    --primary-color: #075e54; /* Green for primary actions, navbar, sent messages */
+    --primary-color: #075e54; /* Green for primary actions, navbar */
     --primary-dark-color: #054d44; /* Darker green for hover */
     --secondary-color: #34b7f1; /* Blue for secondary actions */
     --border-color: #cccccc; /* Standard border color */
-    --light-bubble-color: #dcf8c6; /* Light green for sent messages background */
-    --received-bubble-color: #ffffff; /* White for received messages background */
+    --light-bubble-color: #dcf8c6; /* Light green for chat messages (sent) */
+    --received-bubble-color: #ffffff; /* White for chat messages (received) */
     --button-text-color: white; /* Text color for primary buttons */
-    --sidebar-width: 280px;
+    --list-item-hover: #e0e0e0; /* Light background on list item hover */
+    --sidebar-width: 280px; /* Width of the sidebar in dashboard */
 }
 
+/* Dark Mode Overrides for CSS Variables */
 body.dark-mode {
-    /* Dark Mode Overrides */
     --background-color: #1a202c;
     --surface-color: #2d3748;
     --text-color: #e2e8f0;
@@ -25,46 +26,115 @@ body.dark-mode {
     --primary-dark-color: #38a169;
     --secondary-color: #63b3ed; /* Dark mode blue */
     --border-color: #4a5568;
-    --light-bubble-color: var(--primary-color); /* Sent messages use primary color in dark mode */
-    --received-bubble-color: var(--surface-color); /* Received messages use surface color */
-    --button-text-color: var(--text-color); /* Adjust button text color for dark mode */
+    --light-bubble-color: var(--primary-color);
+    --received-bubble-color: var(--surface-color);
+    --button-text-color: var(--text-color);
+    --list-item-hover: #4a5568;
 }
 
-/* --- General Body Styling --- */
+/* --- Global Body Styling (applies to all pages) --- */
 body {
     font-family: 'Arial', sans-serif;
     background-color: var(--background-color);
     margin: 0;
-    padding-top: 60px; /* Space for the fixed navbar */
-    transition: background-color 0.3s ease, color 0.3s ease;
     color: var(--text-color);
     line-height: 1.6;
-    min-height: 100vh; /* Ensure body takes at least full viewport height */
-    box-sizing: border-box; /* Include padding/border in height calculation */
+    min-height: 100vh;
+    box-sizing: border-box;
+    transition: background-color 0.3s ease, color 0.3s ease; /* Smooth transition for dark mode */
 }
 
-/* --- Navbar Styling --- */
+/* --- Login Page (index.html) Specific Layout --- */
+body.login-page {
+    display: flex; /* Use flexbox to center content */
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+    padding: 20px; /* Add some padding around the form */
+    padding-top: 0; /* Remove padding-top from body.login-page */
+}
+
+/* Container for Login/Signup Form (specific to index.html) */
+body.login-page .container {
+    background-color: var(--surface-color);
+    padding: 40px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 400px; /* Max width for the form container */
+    text-align: center;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+body.login-page .app-title {
+    color: var(--primary-color);
+    margin-bottom: 30px;
+    font-size: 28px;
+    font-weight: bold;
+    transition: color 0.3s ease;
+}
+
+/* --- Dashboard Page (menu.html) Specific Layout --- */
+body.dashboard-page {
+    padding-top: 60px; /* Space for the fixed navbar */
+    display: flex; /* Use flexbox for sidebar and main content */
+    flex-direction: column; /* Stack navbar, then dashboard-container */
+}
+
+.dashboard-container {
+    display: flex; /* Use flexbox for sidebar and main content */
+    flex-grow: 1; /* Make it fill remaining vertical space */
+    height: calc(100vh - 60px); /* Full height minus navbar height */
+}
+
+/* Sidebar styling */
+.sidebar {
+    width: var(--sidebar-width);
+    background-color: var(--surface-color);
+    border-right: 1px solid var(--border-color);
+    padding: 15px;
+    overflow-y: auto;
+    flex-shrink: 0; /* Prevent sidebar from shrinking */
+    display: flex;
+    flex-direction: column;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+/* Main content area styling */
+.main-content {
+    flex-grow: 1; /* Take remaining space */
+    padding: 15px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    background-color: var(--background-color);
+    transition: background-color 0.3s ease;
+    box-sizing: border-box;
+}
+
+/* --- Common UI Components (Used on multiple pages) --- */
+
+/* Navbar styling (for both menu.html and requests.html) */
 .navbar {
     background-color: var(--primary-color);
-    color: white; /* Default text color for navbar */
+    color: var(--button-text-color); /* Use button text color for consistency */
     padding: 10px 20px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    position: fixed; /* Keep navbar at the top */
+    position: fixed;
     top: 0;
     left: 0;
     width: 100%;
-    height: 60px; /* Fixed height for the navbar */
+    height: 60px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    z-index: 1000; /* Ensure navbar is on top of other content */
+    z-index: 1000;
     box-sizing: border-box;
     transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .navbar-left h2 {
     margin: 0;
-    color: white; /* Title color in navbar */
+    color: var(--button-text-color);
     font-size: 1.5em;
     transition: color 0.3s ease;
 }
@@ -74,18 +144,19 @@ body {
     align-items: center;
 }
 
-.navbar-right span { /* User name display */
+.navbar-right span#user-name-display { /* Specificity for username in navbar */
     margin-right: 15px;
     font-size: 1.1em;
     font-weight: bold;
+    color: var(--button-text-color);
     transition: color 0.3s ease;
 }
 
-/* Styling for navbar buttons */
+/* Navbar buttons */
 .nav-button {
     background-color: transparent;
-    color: white;
-    border: 1px solid white;
+    color: var(--button-text-color);
+    border: 1px solid var(--button-text-color);
     padding: 8px 15px;
     margin-left: 10px;
     border-radius: 4px;
@@ -98,109 +169,82 @@ body {
     background-color: rgba(255, 255, 255, 0.1);
 }
 
-/* --- Dark Mode Styles for Navbar --- */
-body.dark-mode .navbar {
-    background-color: var(--surface-color);
-    color: var(--text-color);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-}
-body.dark-mode .navbar-left h2 {
-    color: var(--text-color);
-}
-body.dark-mode .navbar-right span {
-    color: var(--text-color);
-}
-body.dark-mode .nav-button {
-    color: var(--text-color);
-    border-color: var(--border-color);
-}
-body.dark-mode .nav-button:hover {
-    background-color: rgba(0, 0, 0, 0.1);
-}
-
-/* --- Layout for the main dashboard area (Sidebar + Main Content) --- */
-.dashboard-container {
-    display: flex; /* Use flexbox for sidebar and main content */
-    height: calc(100vh - 60px); /* Full height minus navbar height */
-    /* Make sure this height calculation is correct based on your navbar height */
-}
-
-/* Sidebar width and basic styling */
-.sidebar {
-    width: var(--sidebar-width); /* Use CSS variable or default */
-    background-color: var(--surface-color);
-    border-right: 1px solid var(--border-color);
-    padding: 15px;
-    overflow-y: auto; /* Enable scrolling in sidebar */
-    flex-shrink: 0; /* Prevent sidebar from shrinking */
-    transition: background-color 0.3s ease, border-color 0.3s ease;
-    display: flex; /* Arrange items in a column */
-    flex-direction: column;
-}
-
-/* Main content area styling (for the chat interface) */
-.main-content {
-    flex-grow: 1; /* Take remaining space */
-    padding: 15px;
-    overflow-y: auto; /* Enable scrolling in main content */
-    display: flex; /* Stack chat elements vertically */
-    flex-direction: column;
-    background-color: var(--background-color);
-    transition: background-color 0.3s ease;
-    /* max-width: 800px;  Remove max-width and margin:auto if sidebar is fixed width */
-    /* margin: 0 auto; */
-    box-sizing: border-box;
-}
-
-/* --- Styling for sections within the Sidebar --- */
-.search-area {
-    display: flex;
-    margin-bottom: 10px; /* Adjusted margin */
-    gap: 5px; /* Space between input and button */
-}
-
-.search-area input[type="text"] {
-    flex-grow: 1;
-    padding: 8px; /* Adjusted padding */
+/* Generic input styles (for all pages) */
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="date"],
+select {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px; /* Default margin for stacked inputs */
     border: 1px solid var(--border-color);
     border-radius: 4px;
+    box-sizing: border-box;
     font-size: 1em;
     background-color: var(--surface-color);
     color: var(--text-color);
     transition: border-color 0.3s ease, background-color 0.3s ease, color 0.3s ease;
-    outline: none; /* Remove outline on focus */
+    outline: none;
 }
 
-.search-area button {
-    padding: 8px 12px;
-    border: 1px solid var(--primary-color); /* Use primary color for button */
+select {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background-image: url('data:image/svg+xml;utf8,<svg fill="%23333" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/><path d="M0 0h24v24H0z" fill="none"/></svg>');
+    background-repeat: no-repeat;
+    background-position: right 10px top 50%;
+    background-size: 12px auto;
+}
+body.dark-mode select {
+    background-image: url('data:image/svg+xml;utf8,<svg fill="%23e2e8f0" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/><path d="M0 0h24v24H0z" fill="none"/></svg>'); /* Dark mode SVG for select arrow */
+}
+
+
+/* Generic button styles (for all pages) */
+button {
+    padding: 10px 20px;
     background-color: var(--primary-color);
-    color: white;
+    color: var(--button-text-color);
+    border: none;
     border-radius: 4px;
     cursor: pointer;
     font-size: 1em;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-.search-area button:hover {
+button:hover {
     background-color: var(--primary-dark-color);
 }
 
-/* Dark mode for search input */
-body.dark-mode .search-area input[type="text"] {
-     border-color: var(--border-color);
-}
-body.dark-mode .search-area button {
-     border-color: var(--primary-color);
-     background-color: var(--primary-color);
-     color: white;
-}
-body.dark-mode .search-area button:hover {
-    background-color: var(--primary-dark-color);
+button:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+    color: #666;
 }
 
+/* General Heading Styles (for all pages) */
+h2, h3, h4 {
+    color: var(--text-color); /* Use text color variable */
+    margin-top: 0;
+    margin-bottom: 10px;
+    transition: color 0.3s ease;
+}
 
-/* Styling for all list containers (Friends, Search Results) */
+/* --- Search Area Styles (for dashboard) --- */
+.search-area {
+    display: flex;
+    margin-bottom: 10px;
+    gap: 5px;
+}
+.search-area input[type="text"] {
+    flex-grow: 1;
+    margin-bottom: 0; /* Override default margin */
+    border-radius: 4px; /* Ensure input has full border radius */
+}
+
+/* --- List Styles (for dashboard lists) --- */
 .list {
     list-style: none;
     padding: 0;
@@ -211,7 +255,6 @@ body.dark-mode .search-area button:hover {
     transition: border-color 0.3s ease, background-color 0.3s ease;
 }
 
-/* Styling for individual items in lists */
 .list-item {
     padding: 10px;
     border-bottom: 1px solid var(--border-color);
@@ -237,45 +280,25 @@ body.dark-mode .search-area button:hover {
     word-break: break-word;
 }
 
-
-/* --- Button Styling for list items (Add Friend, Chat) --- */
-.list-item button {
-    padding: 5px 10px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 0.9em;
-    margin-left: 5px;
-    transition: background-color 0.3s ease;
-    color: var(--button-text-color); /* Use button text color */
-}
-
-.list-item .add-button {
-    background-color: var(--primary-color);
-}
-.list-item .add-button:hover {
-    background-color: var(--primary-dark-color);
-}
-
-.list-item .chat-button {
-    background-color: var(--secondary-color); /* Blue for chat button */
-}
-.list-item .chat-button:hover {
-    background-color: #2b8cdb; /* Darker blue */
-}
+/* List Item Button Colors (specific for 'Add Friend', 'Chat' buttons) */
+.list-item .add-button { background-color: var(--primary-color); color: white; }
+.list-item .chat-button { background-color: var(--secondary-color); color: white; }
+.list-item .accept-button { background-color: var(--success-color); color: white; }
+.list-item .reject-button { background-color: var(--danger-color); color: white; }
+.list-item .cancel-button { background-color: var(--warning-color); color: var(--text-color); }
 
 
 /* --- Chat Interface Styling (within main-content) --- */
 .chat-container {
-    flex-grow: 1; /* Make the chat area fill available space within main-content */
+    flex-grow: 1;
     background-color: var(--surface-color);
     border: 1px solid var(--border-color);
     border-radius: 8px;
     display: flex;
-    flex-direction: column; /* Stack header, messages, input vertically */
-    overflow: hidden; /* Hide overflowing messages */
+    flex-direction: column;
+    overflow: hidden;
     transition: background-color 0.3s ease, border-color 0.3s ease;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05); /* Subtle shadow */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
 #chat-header {
@@ -293,22 +316,22 @@ body.dark-mode .search-area button:hover {
 }
 
 #chat-messages-list {
-    flex-grow: 1; /* Allow messages area to take available space */
-    overflow-y: auto; /* Enable scrolling for messages */
+    flex-grow: 1;
+    overflow-y: auto;
     padding: 15px;
     background-color: var(--background-color);
     border-radius: 4px;
     display: flex;
-    flex-direction: column; /* Stack messages vertically */
+    flex-direction: column;
     transition: background-color 0.3s ease;
 }
 
 .chat-message {
     margin-bottom: 8px;
     padding: 8px 12px;
-    border-radius: 15px; /* Rounded corners for message bubbles */
-    max-width: 70%; /* Limit message bubble width */
-    word-wrap: break-word; /* Break long words */
+    border-radius: 15px;
+    max-width: 70%;
+    word-wrap: break-word;
     line-height: 1.4;
     font-size: 0.95em;
     transition: background-color 0.3s ease, color 0.3s ease;
@@ -329,18 +352,17 @@ body.dark-mode .search-area button:hover {
 }
 
 .chat-message.sent {
-    align-self: flex-end; /* Align to the right */
+    align-self: flex-end;
     background-color: var(--light-bubble-color);
     color: var(--text-color);
 }
 
 .chat-message.received {
-    align-self: flex-start; /* Align to the left */
+    align-self: flex-start;
     background-color: var(--received-bubble-color);
     color: var(--text-color);
     border: 1px solid var(--border-color);
 }
-
 
 #message-input-area {
     display: flex;
@@ -367,7 +389,6 @@ body.dark-mode .search-area button:hover {
     opacity: 0.6;
     cursor: not-allowed;
 }
-
 
 #send-message-button {
     padding: 10px 20px;
@@ -398,75 +419,117 @@ body.dark-mode .search-area button:hover {
     transition: color 0.3s ease, opacity 0.3s ease;
 }
 
+/* --- Style for the welcome message in a new chat --- */
+.chat-welcome-message {
+    text-align: center;
+    font-style: italic;
+    color: var(--text-color);
+    opacity: 0.8;
+    padding: 15px;
+    margin-bottom: 20px;
+    background-color: var(--surface-color);
+    border-radius: 8px;
+    transition: background-color 0.3s ease, color 0.3s ease, opacity 0.3s ease;
+}
+
+.chat-welcome-message p {
+    margin: 5px 0;
+}
 
 
-body.dark-mode .navbar {
+
+
+/* Login page dark mode */
+body.login-page.dark-mode .container {
+    background-color: var(--surface-color);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+body.login-page.dark-mode .app-title {
+    color: var(--primary-color);
+}
+
+
+/* Dashboard page dark mode */
+body.dashboard-page.dark-mode .navbar {
     background-color: var(--surface-color);
     color: var(--text-color);
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
-body.dark-mode .navbar-left h2 {
+body.dashboard-page.dark-mode .navbar-left h2 {
     color: var(--text-color);
 }
-body.dark-mode .navbar-right span {
+body.dashboard-page.dark-mode .navbar-right span {
     color: var(--text-color);
 }
-body.dark-mode .nav-button {
+body.dashboard-page.dark-mode .nav-button {
     color: var(--text-color);
     border-color: var(--border-color);
 }
-body.dark-mode .nav-button:hover {
+body.dashboard-page.dark-mode .nav-button:hover {
     background-color: rgba(0, 0, 0, 0.1);
 }
 
-
-body.dark-mode .sidebar {
+body.dashboard-page.dark-mode .sidebar {
     background-color: var(--surface-color);
     border-right-color: var(--border-color);
 }
-body.dark-mode .main-content {
+
+body.dashboard-page.dark-mode .main-content {
     background-color: var(--background-color);
 }
-body.dark-mode .search-area input[type="text"] {
+
+/* Dark mode for common components */
+body.dark-mode input[type="text"],
+body.dark-mode input[type="email"],
+body.dark-mode input[type="password"],
+body.dark-mode input[type="date"],
+body.dark-mode select {
     background-color: var(--surface-color);
     border-color: var(--border-color);
     color: var(--text-color);
 }
-body.dark-mode .search-area button {
-     background-color: var(--primary-color);
-     border-color: var(--primary-color);
+
+body.dark-mode button {
+    background-color: var(--primary-color);
+    color: var(--button-text-color);
 }
-body.dark-mode .search-area button:hover {
+
+body.dark-mode button:hover {
     background-color: var(--primary-dark-color);
 }
+
+body.dark-mode button:disabled {
+    background-color: var(--border-color);
+    color: var(--text-color);
+}
+
 body.dark-mode .list {
     background-color: var(--surface-color);
     border-color: var(--border-color);
 }
+
 body.dark-mode .list-item {
     border-bottom-color: var(--border-color);
     color: var(--text-color);
 }
+
 body.dark-mode .list-item:hover {
     background-color: var(--list-item-hover);
 }
-body.dark-mode .list-item button {
-    color: var(--button-text-color); /* Should already be handled by var() */
-}
-body.dark-mode .list-item .add-button {
-    background-color: var(--primary-color);
-}
-body.dark-mode .list-item .add-button:hover {
-    background-color: var(--primary-dark-color);
-}
-body.dark-mode .list-item .chat-button {
-    background-color: var(--secondary-color);
-}
-body.dark-mode .list-item .chat-button:hover {
-    background-color: #2b8cdb;
-}
 
-/* Chat-specific dark mode overrides */
+body.dark-mode .list-item .add-button { background-color: var(--primary-color); }
+body.dark-mode .list-item .add-button:hover { background-color: var(--primary-dark-color); }
+body.dark-mode .list-item .chat-button { background-color: var(--secondary-color); }
+body.dark-mode .list-item .chat-button:hover { background-color: #63b3ed; } /* Darker secondary */
+body.dark-mode .list-item .accept-button { background-color: var(--success-color); }
+body.dark-mode .list-item .accept-button:hover { background-color: var(--primary-dark-color); }
+body.dark-mode .list-item .reject-button { background-color: var(--danger-color); }
+body.dark-mode .list-item .reject-button:hover { background-color: #e53e3e; }
+body.dark-mode .list-item .cancel-button { background-color: var(--warning-color); color: var(--text-color); } /* Yellow has dark text */
+body.dark-mode .list-item .cancel-button:hover { background-color: #f6e05e; }
+
+
+/* Dark mode for chat specific elements */
 body.dark-mode .chat-container {
     background-color: var(--surface-color);
     border-color: var(--border-color);
@@ -517,31 +580,85 @@ body.dark-mode #send-message-button:disabled {
 body.dark-mode .empty-state {
     color: var(--text-color);
 }
-
-#attach-button {
- padding: 10px 15px;
- background-color: transparent;
- color: var(--primary-color);
- border: 1px solid var(--primary-color);
- border-radius: 20px;
- cursor: pointer;
- font-size: 1em;
- transition: background-color 0.3s ease, color 0.3s ease;
+body.dark-mode .chat-welcome-message {
+    background-color: var(--surface-color);
+    color: var(--text-color);
 }
 
-#attach-button:hover {
- background-color: rgba(var(--primary-color-rgb), 0.1); /* Use RGB for opacity */
- color: var(--primary-dark-color);
- border-color: var(--primary-dark-color);
+
+
+#notification-toast {
+    position: fixed; /* Fixed position so it stays in place */
+    top: 20px; /* Distance from top */
+    right: 20px; /* Distance from right */
+    background-color: var(--primary-color); /* Primary color background */
+    color: white; /* White text */
+    padding: 15px 25px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    z-index: 2000; /* Ensure it's on top of everything */
+    opacity: 0; /* Initially hidden (transparent) */
+    visibility: hidden; /* Hidden from screen readers and interaction initially */
+    transform: translateY(-20px); /* Start slightly above the final position */
+    transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out, visibility 0.5s; /* Smooth animation */
+    min-width: 250px; /* Ensure it's wide enough */
+    text-align: center;
+    font-size: 1.1em;
 }
 
-body.dark-mode #attach-button {
- color: var(--secondary-color);
- border-color: var(--secondary-color);
+#notification-toast.notification-visible {
+    opacity: 1; /* Fully visible */
+    visibility: visible; /* Visible to screen readers and interaction */
+    transform: translateY(0); /* Slide down to final position */
 }
 
-body.dark-mode #attach-button:hover {
- background-color: rgba(var(--secondary-color-rgb), 0.1);
- color: #63b3ed;
- border-color: #63b3ed;
+/* Dark mode for notification */
+body.dark-mode #notification-toast {
+    background-color: var(--primary-color); /* Uses dark mode primary color */
+    color: var(--button-text-color); /* Uses dark mode button text color */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5); /* Darker shadow in dark mode */
+}
+
+
+
+/* Styling for the Requests Badge */
+.requests-badge {
+    position: absolute;
+    top: -8px; /* Adjust vertical position */
+    right: -8px; /* Adjust horizontal position */
+    background-color: #dc3545; /* Red background for new notifications */
+    color: white; /* White text */
+    border-radius: 50%; /* Make it circular */
+
+    /* --- Changes for perfect circle and centering --- */
+    width: 20px; /* Explicit width */
+    height: 20px; /* Explicit height, equal to width */
+    padding: 0; /* Remove padding to make width/height exact for circle */
+    display: flex; /* Use flexbox to center content */
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+    /* --- End changes --- */
+
+    font-size: 0.7em; /* Smaller font size */
+    font-weight: bold;
+    /* min-width: 18px; // Removed as width/height are explicit now */
+    text-align: center; /* Redundant with flexbox centering, but harmless */
+    line-height: 1; /* Adjust line-height to help with vertical alignment if needed */
+    transition: background-color 0.3s ease; /* Smooth transition */
+}
+
+/* Ensure the parent button is positioned relatively for absolute badge positioning */
+.nav-button {
+    position: relative; /* Add this if not already present, for badge positioning */
+    /* Other nav-button styles */
+}
+
+/* Rule to hide the badge when it has the 'hidden' class */
+.requests-badge.hidden {
+    display: none;
+}
+
+/* Dark mode for badge */
+body.dark-mode .requests-badge {
+    background-color: var(--danger-color); /* Use dark mode danger color */
 }

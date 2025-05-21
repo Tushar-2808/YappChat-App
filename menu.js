@@ -1,7 +1,6 @@
 // menu.js
 
 // Import the necessary Firebase services from your config file
-// Removed 'storage' import as it's no longer used for file uploads
 import { auth, db } from "./config.js";
 
 // Import other modular functions you need from Firebase
@@ -10,8 +9,6 @@ import {
     doc, getDoc, collection, query, where, getDocs, orderBy, addDoc, serverTimestamp, onSnapshot,
     documentId // Needed for fetchUserNames
 } from "https://www.gstatic.com/firebasejs/11.7.3/firebase-firestore.js";
-// Removed Storage imports as file upload is removed
-// import { ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/11.7.3/firebase-storage.js";
 
 
 // Import handleSendFriendRequest from friendrequest.js
@@ -31,14 +28,12 @@ const friendsListDiv = document.getElementById('friends-list');
 const chatFriendNameDisplay = document.getElementById('chat-friend-name');
 const chatMessagesListDiv = document.getElementById('chat-messages-list');
 const messageInput = document.getElementById('message-input');
-const sendButton = document.getElementById('send-message-button'); // Correctly defined sendButton
-
-// *** Removed file upload DOM elements ***
-// const fileUploadInput = document.getElementById('file-upload');
-// const attachButton = document.getElementById('attach-button');
+const sendButton = document.getElementById('send-message-button');
 
 // Get reference to the requests navigation button (from menu.html navbar)
 const requestsNavButton = document.getElementById('requests-nav-button');
+// *** Get reference to the requests badge element ***
+const requestsBadge = document.getElementById('requests-badge');
 
 
 let currentUser = null;
@@ -55,7 +50,7 @@ let searchTimeout = null;
 const DEBOUNCE_DELAY = 300;
 
 
-// --- Define all functions at the top level ---
+// --- Functions at the top level ---
 
 // Function to fetch and display user data
 async function fetchAndDisplayUserData(uid) {
@@ -179,8 +174,9 @@ async function performSearch(searchTerm) {
 }
 
 
-// Function to set up realtime listeners (Only for Friends on menu.js)
+// Function to set up realtime listeners (Friends and Friend Request Badge)
 function setupRealtimeListeners(uid) {
+    // Listener for Friends (using subcollection)
     const friendsCollectionRef = collection(db, 'users', uid, 'friends');
     onSnapshot(friendsCollectionRef, (snapshot) => {
         const friends = [];
@@ -201,6 +197,28 @@ function setupRealtimeListeners(uid) {
 
     }, (error) => {
         console.error("Error listening to friends:", error);
+    });
+
+    // *** Listener for Incoming Friend Request Badge (on menu.js) ***
+    const incomingRequestsBadgeQuery = query(collection(db, 'friendRequests'),
+        where('to', '==', uid),
+        where('status', '==', 'pending')
+    );
+    onSnapshot(incomingRequestsBadgeQuery, (snapshot) => {
+        const pendingCount = snapshot.size;
+        if (requestsBadge) { // Ensure badge element exists
+            requestsBadge.textContent = pendingCount;
+            if (pendingCount > 0) {
+                requestsBadge.classList.remove('hidden');
+            } else {
+                requestsBadge.classList.add('hidden');
+            }
+        }
+    }, (error) => {
+        console.error("Error listening to incoming requests for badge:", error);
+        if (requestsBadge) {
+             requestsBadge.classList.add('hidden'); // Hide badge on error
+        }
     });
 }
 
@@ -247,7 +265,6 @@ async function displayFriends(friends) {
                  <small>${friendData[friend.uid]?.email || 'Email Not Available'}</small>
              </span>
          `;
-        // Add click listener to friend item to initiate chat
         friendItem.addEventListener('click', () => {
             console.log("Friend clicked:", friend.uid);
             initiateChat(friend.uid, friendData[friend.uid]?.name || 'User');
@@ -260,7 +277,6 @@ async function displayFriends(friends) {
 // --- Chat Functionality (Integrated into menu.js) ---
 
 // Function to display messages in the chat area
-// Removed file-related display logic
 function displayMessages(messageDocs, friendName) {
     chatMessagesListDiv.innerHTML = '';
 
@@ -285,14 +301,11 @@ function displayMessages(messageDocs, friendName) {
             messageElement.classList.add('received');
         }
 
-        // Only display text messages
         if (message.text) {
             messageElement.innerHTML = `<p>${message.text}</p>`;
         } else {
-             // Fallback for non-text messages if old file messages exist
              messageElement.innerHTML = `<p>[File message type not supported]</p>`;
         }
-
 
         if (message.timestamp) {
             const timestamp = message.timestamp.toDate();
@@ -309,8 +322,7 @@ function displayMessages(messageDocs, friendName) {
     chatMessagesListDiv.scrollTop = chatMessagesListDiv.scrollHeight;
 }
 
-// Function to send a new message
-// Removed fileURL parameter and file-related logic
+// Function to send a new message (text only)
 async function sendMessage() {
     const messageText = messageInput.value.trim();
 
@@ -322,21 +334,18 @@ async function sendMessage() {
 
     const messageData = {
         senderId: currentUser.uid,
-        text: messageText, // Only send text
+        text: messageText,
         timestamp: serverTimestamp()
     };
 
     try {
         await addDoc(messagesCollectionRef, messageData);
         console.log("Message sent successfully to chat:", currentChatId);
-        messageInput.value = ''; // Clear the input field
+        messageInput.value = '';
     } catch (error) {
         console.error("Error sending message:", error);
     }
 }
-
-// *** Removed uploadFile function as file uploads are removed ***
-// async function uploadFile(file) { ... }
 
 
 // Function to initiate a chat with a friend
@@ -370,7 +379,7 @@ async function initiateChat(friendUid, friendName) {
 
     unsubscribeMessages = onSnapshot(messagesQuery, (snapshot) => {
         console.log("New message snapshot received for chat:", chatId);
-        displayMessages(snapshot.docs, friendName); // Pass friendName to displayMessages
+        displayMessages(snapshot.docs, friendName);
     }, (error) => {
         console.error("Error listening to messages:", error);
         chatMessagesListDiv.innerHTML = '<p class="empty-state">Error loading messages.</p>';
@@ -378,9 +387,6 @@ async function initiateChat(friendUid, friendName) {
 
     messageInput.disabled = false;
     sendButton.disabled = false;
-    // *** Removed file upload input/button disabling/enabling ***
-    // fileUploadInput.disabled = false;
-    // attachButton.disabled = false;
 }
 
 
@@ -394,17 +400,10 @@ messageInput.addEventListener('keypress', (event) => {
     }
 });
 
-// *** Removed file upload event listeners ***
-// attachButton.addEventListener('click', () => { ... });
-// fileUploadInput.addEventListener('change', async () => { ... });
-
 
 // --- Disable message input initially ---
 messageInput.disabled = true;
 sendButton.disabled = true;
-// *** Removed file upload input/button initial disabling ***
-// fileUploadInput.disabled = true;
-// attachButton.disabled = true;
 
 
 // --- Authentication State Observer ---
@@ -415,23 +414,21 @@ onAuthStateChanged(auth, (user) => {
         console.log("User is signed in on menu page:", currentUser.uid);
 
         fetchAndDisplayUserData(currentUser.uid);
-        setupRealtimeListeners(currentUser.uid); // Sets up listeners for friends ONLY on menu.js
+        setupRealtimeListeners(currentUser.uid); // Sets up listeners for friends and badge
         setupLiveSearch();
 
-        // Show default chat state or a message (e.g., "Select a friend to chat")
         chatFriendNameDisplay.textContent = "Select a friend to chat";
         chatMessagesListDiv.innerHTML = '<p class="empty-state">No conversation selected.</p>';
 
     } else {
         currentUser = null;
         console.log("User is signed out. Redirecting to login.");
-        window.location.href = 'index.html'; // Redirect to login/signup page
+        window.location.href = 'index.html';
     }
 });
 
 
 // --- Other General Event Listeners ---
-// These are attached once the DOM is ready
 
 // Theme switch button listener
 themeSwitchButton.addEventListener('click', () => {
@@ -461,9 +458,9 @@ logoutButton.addEventListener('click', () => {
 
 // Event Listener for Requests Navigation Button
 // This button will navigate to the separate requests.html page
-if (requestsNavButton) { // Check if the button exists in menu.html
+if (requestsNavButton) {
     requestsNavButton.addEventListener('click', () => {
-        window.location.href = 'requests.html'; // Navigate to the requests page
+        window.location.href = 'requests.html';
     });
 } else {
     console.error("Requests navigation button not found in menu.html");
