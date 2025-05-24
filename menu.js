@@ -40,6 +40,8 @@ const requestsBadge = document.getElementById('requests-badge');
 const mobileMenuToggle = document.getElementById('mobile-menu-toggle');
 console.log("Mobile Menu Toggle Element:", mobileMenuToggle);
 
+// Get reference to the friends navigation button
+const friendsNavButton = document.getElementById('friends-nav-button');
 
 let currentUser = null;
 let currentUserFriends = [];
@@ -59,9 +61,71 @@ const DEBOUNCE_DELAY = 300;
 function toggleSidebar() {
     console.log('Toggle sidebar clicked!');
     const sidebar = document.querySelector('.sidebar');
+    const navbarRight = document.querySelector('.navbar-right');
+    
     if (sidebar) {
         sidebar.classList.toggle('active');
     }
+    
+    // Toggle navbar-right visibility on mobile
+    if (navbarRight) {
+        navbarRight.classList.toggle('mobile-visible');
+    }
+}
+
+// Function to populate friends list in mobile menu
+async function populateMobileFriendsList() {
+    const navbarRight = document.querySelector('.navbar-right');
+    if (!navbarRight || !currentUser) return;
+
+    // Remove existing friends list if any
+    const existingList = navbarRight.querySelector('.friends-list');
+    if (existingList) {
+        existingList.remove();
+    }
+
+    // Create new friends list container
+    const friendsList = document.createElement('div');
+    friendsList.className = 'friends-list';
+    friendsList.style.display = 'none'; // Initially hidden
+
+    // Get friends data
+    const friendsCollectionRef = collection(db, 'users', currentUser.uid, 'friends');
+    const snapshot = await getDocs(friendsCollectionRef);
+    
+    if (snapshot.empty) {
+        friendsList.innerHTML = '<div class="list-item">No friends yet</div>';
+    } else {
+        const friends = [];
+        snapshot.forEach(doc => {
+            friends.push({ uid: doc.id, ...doc.data() });
+        });
+
+        // Get friend names
+        const friendData = await fetchUserNames(friends.map(f => f.uid));
+
+        // Create list items
+        friends.forEach(friend => {
+            const friendItem = document.createElement('div');
+            friendItem.className = 'list-item';
+            friendItem.innerHTML = `
+                <strong>${friendData[friend.uid]?.name || 'User'}</strong>
+                <small>${friendData[friend.uid]?.email || 'Email Not Available'}</small>
+            `;
+            
+            // Add click handler to start chat
+            friendItem.addEventListener('click', () => {
+                initiateChat(friend.uid, friendData[friend.uid]?.name || 'User');
+                navbarRight.classList.remove('mobile-visible');
+            });
+            
+            friendsList.appendChild(friendItem);
+        });
+    }
+
+    // Insert friends list after the Friends button
+    const friendsButton = navbarRight.querySelector('#friends-nav-button');
+    navbarRight.insertBefore(friendsList, friendsButton.nextSibling);
 }
 
 // Function to fetch and display user data
@@ -489,3 +553,32 @@ if (requestsNavButton) {
 } else {
     console.error("Requests navigation button not found in menu.html");
 }
+
+// Add event listener for mobile menu toggle
+mobileMenuToggle?.addEventListener('click', toggleSidebar);
+
+// Close mobile menu when clicking outside
+document.addEventListener('click', (e) => {
+    const sidebar = document.querySelector('.sidebar');
+    const navbarRight = document.querySelector('.navbar-right');
+    const mobileMenuToggle = document.getElementById('mobile-menu-toggle');
+    
+    if (sidebar?.classList.contains('active') && 
+        !sidebar.contains(e.target) && 
+        !mobileMenuToggle.contains(e.target)) {
+        sidebar.classList.remove('active');
+        navbarRight?.classList.remove('mobile-visible');
+    }
+});
+
+// Add event listener for friends navigation button
+friendsNavButton?.addEventListener('click', () => {
+    const friendsList = document.querySelector('.friends-list');
+    if (friendsList) {
+        // Toggle friends list visibility
+        friendsList.style.display = friendsList.style.display === 'none' ? 'block' : 'none';
+        
+        // Update button text to show state
+        friendsNavButton.textContent = friendsList.style.display === 'none' ? 'Friends ▼' : 'Friends ▲';
+    }
+});

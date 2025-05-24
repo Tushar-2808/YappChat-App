@@ -133,7 +133,7 @@ body.dashboard-page {
     color: var(--button-text-color);
     padding: 10px 20px;
     display: flex;
-    justify-content: space-between;
+    justify-content: space-between; /* Distribute space between items */
     align-items: center;
     position: fixed;
     top: 0;
@@ -147,8 +147,9 @@ body.dashboard-page {
 }
 
 .navbar-left {
-    display: flex; /* Ensure hamburger and title align */
+    display: flex;
     align-items: center;
+    gap: 15px;
 }
 
 .navbar-left h2 {
@@ -159,8 +160,9 @@ body.dashboard-page {
 }
 
 .navbar-right {
-    display: flex;
+    display: flex; /* Keep as flex to align its internal items */
     align-items: center;
+    /* On desktop, this will be between navbar-left and the Friends button */
 }
 
 span#user-name-display { /* Specificity for username in navbar */
@@ -188,13 +190,18 @@ span#user-name-display { /* Specificity for username in navbar */
     background-color: rgba(255, 255, 255, 0.1);
 }
 
+/* Style for the separate Friends button on the right */
+.navbar #friends-nav-button {
+    margin-left: auto; /* Push to the extreme right */
+}
+
 /* --- Mobile Specific Navbar Toggle Button --- */
 .mobile-only {
     display: none; /* Hidden by default on desktop */
     font-size: 1.5em;
     padding: 5px 10px;
     margin-left: 0;
-    margin-right: 10px;
+    margin-right: 10px; /* Added margin to push H2 away from button */
     border: none;
 }
 body.dashboard-page.dark-mode .mobile-only {
@@ -273,7 +280,7 @@ h2, h3, h4 {
 }
 .search-area input[type="text"] {
     flex-grow: 1;
-    margin-bottom: 0;
+    margin-bottom: 0; /* Override default margin */
     border-radius: 4px;
 }
 
@@ -479,18 +486,23 @@ h2, h3, h4 {
 
 @media (max-width: 768px) {
     body.dashboard-page {
-        flex-direction: column; /* Stack navbar, then dashboard-container */
+        flex-direction: column;
     }
 
     .dashboard-container {
-        flex-direction: column; /* Stack sidebar and main content vertically */
-        height: calc(100vh - 60px); /* Fill remaining height */
+        flex-direction: column;
+        height: calc(100vh - 60px);
     }
 
     /* Show mobile toggle button */
     .mobile-only {
-        display: block; /* Make the hamburger icon visible */
-        margin-right: 10px; /* Space between icon and app title */
+        display: block;
+        cursor: pointer;
+        background: none;
+        border: none;
+        color: var(--button-text-color);
+        font-size: 1.5em;
+        padding: 5px 10px;
     }
 
     /* Sidebar takes full width on mobile */
@@ -499,16 +511,15 @@ h2, h3, h4 {
         border-right: none;
         border-bottom: 1px solid var(--border-color);
         padding: 10px 15px;
-        /* Initially hide sidebar on mobile */
-        max-height: 0; /* Collapse sidebar */
-        overflow: hidden; /* Hide content that overflows */
-        opacity: 0; /* Make it transparent */
+        max-height: 0;
+        overflow: hidden;
+        opacity: 0;
         transition: max-height 0.3s ease-out, opacity 0.3s ease-out, padding 0.3s ease-out;
     }
 
     /* Style for active (shown) sidebar on mobile */
     .sidebar.active {
-        max-height: 50vh; /* Expand to show content */
+        max-height: 50vh;
         opacity: 1;
         overflow-y: auto;
         padding: 15px;
@@ -522,44 +533,162 @@ h2, h3, h4 {
     }
 
     /* Adjust navbar elements for mobile */
+    .navbar {
+         justify-content: space-between; /* Space out items */
+         flex-wrap: wrap; /* Allow wrapping for the dropdown */
+         height: auto; /* Auto height */
+         padding-bottom: 0; /* Remove padding at the bottom */
+         align-items: flex-start; /* Align items to the top */
+    }
+
+    .navbar-left {
+        width: auto; /* Let content define width */
+        justify-content: flex-start; /* Align items to the start */
+        margin-bottom: 0; /* Remove margin */
+        flex-grow: 1; /* Allow to grow to push Friends button */
+        align-items: center; /* Vertically align items within navbar-left */
+    }
+
+     .navbar-left h2 {
+         margin-right: 10px; /* Space between hamburger/title and Friends button */
+     }
+
     .navbar-right {
-        /* You might want to display this as a dropdown or hide it on mobile */
-        display: none; /* Hide other navbar buttons initially for simplicity */
+        display: none; /* Hidden by default */
+        position: absolute; /* Position absolutely below navbar */
+        top: 60px; /* Position below the main navbar row */
+        right: 0;
+        background-color: var(--primary-color); /* Background for the dropdown */
+        width: 100%; /* Full width dropdown */
+        padding: 10px; /* Add padding back for dropdown items */
+        flex-direction: column;
+        align-items: flex-start;
+        max-height: calc(100vh - 60px); /* Max height considering the main navbar row */
+        overflow-y: auto;
+        box-sizing: border-box;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add shadow for dropdown */
+        z-index: 999; /* Lower z-index than fixed navbar */
     }
 
-    /* Adjust search input and button for mobile */
-    .search-area {
-        flex-wrap: wrap;
-        margin-bottom: 10px;
-    }
-    .search-area input[type="text"] {
-        flex-grow: 1;
-        margin-bottom: 5px;
-    }
-    .search-area button {
-        width: 100%;
+    .navbar-right.mobile-visible {
+        display: flex; /* Show when active */
     }
 
-    /* Adjust list item details for smaller screens */
-    .list-item span {
-        font-size: 0.9em;
-    }
-    .list-item button {
-        padding: 4px 8px;
-        font-size: 0.8em;
+    .navbar-right .nav-button {
+        width: calc(100% - 0px); /* Full width */
+        margin: 5px 0; /* Adjust margin */
+        text-align: left;
+        padding: 12px 15px;
+        border: none; /* Remove border */
+        background-color: rgba(255, 255, 255, 0.1); /* Background for dropdown buttons */
+        color: var(--button-text-color);
+        border-radius: 4px;
+        transition: background-color 0.3s ease, border-color 0.3s ease;
     }
 
-    /* Chat bubble adjustments for mobile */
-    .chat-message {
-        max-width: 85%;
+    .navbar-right .nav-button:hover {
+        background-color: rgba(255, 255, 255, 0.2);
+        border-color: rgba(255, 255, 255, 0.6);
+    }
+
+    .navbar-right span {
+        display: none; /* Hide username in mobile dropdown */
+    }
+
+    /* Friends button on mobile - position it on the extreme right */
+    .navbar #friends-nav-button {
+        display: block; /* Show on mobile */
+        margin-left: auto; /* Push to the extreme right */
+        margin-right: 0; /* No margin on the right */
+        order: 0; /* Default order */
+        /* Remove specific positioning like order */
+    }
+
+    /* Hide the mobile friends list dropdown within navbar-right */
+    .navbar-right .friends-list {
+        display: none; /* Ensure this is hidden in the dropdown */
+    }
+
+    /* Adjust spacing between navbar items in the top row */
+    .navbar > .navbar-left, 
+    .navbar > #friends-nav-button {
+        margin-top: 0;
+        margin-bottom: 0;
     }
 }
 
+/* Desktop Styles (>= 769px) */
+@media (min-width: 769px) {
+    .mobile-only {
+        display: none; /* Hide hamburger on desktop */
+    }
 
-/* --- Dark Mode Overrides (General and Specific) --- */
-/* body.dark-mode { */
-    /* Background and text color handled by var() */
-/* } */
+    .navbar {
+        flex-wrap: nowrap; /* Prevent wrapping */
+        height: 60px; /* Fixed height */
+        padding-bottom: 0; /* Remove extra padding */
+        align-items: center; /* Vertically center items */
+    }
+
+    .navbar-left {
+         width: auto;
+         justify-content: flex-start;
+         margin-bottom: 0;
+         flex-grow: 0; /* Prevent growing on desktop */
+    }
+
+     .navbar-left h2 {
+         margin-right: 0; /* Remove margin on desktop */
+     }
+
+    .navbar-right {
+        display: flex; /* Show on desktop */
+        position: static;
+        padding: 0;
+        flex-direction: row;
+        align-items: center;
+        max-height: none;
+        overflow-y: visible;
+        box-sizing: content-box;
+        box-shadow: none;
+        z-index: auto;
+        /* Adjust margin or gap if needed to space it from Friends button */
+    }
+
+     .navbar-right .nav-button {
+         width: auto;
+         margin-left: 10px;
+         padding: 8px 15px;
+         border: 1px solid var(--button-text-color);
+         background-color: transparent;
+         color: var(--button-text-color);
+         border-radius: 4px;
+         transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+     }
+
+     .navbar-right span {
+         display: inline-block; /* Show username */
+         margin-right: 15px;
+         padding: 0;
+         color: var(--button-text-color);
+         font-weight: bold;
+         width: auto;
+         box-sizing: content-box;
+     }
+
+    /* Friends button on desktop - already handled by margin-left: auto */
+    .navbar #friends-nav-button {
+        display: block; /* Ensure it's displayed */
+        margin-left: auto; /* Keep pushed to the right */
+        margin-right: 0;
+        order: 0; /* Reset order for desktop */
+    }
+
+    /* Hide the mobile friends list dropdown on desktop */
+    .navbar-right .friends-list {
+        display: none;
+    }
+}
 
 /* Login page dark mode */
 body.login-page.dark-mode .container {
@@ -711,66 +840,56 @@ body.dark-mode .chat-welcome-message {
     color: var(--text-color);
 }
 
-/* Styles for notification toast */
-#notification-toast {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    background-color: var(--primary-color);
-    color: white;
-    padding: 15px 25px;
-    border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-    z-index: 2000;
-    opacity: 0;
-    visibility: hidden;
-    transform: translateY(-20px);
-    transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out, visibility 0.5s;
-    min-width: 250px;
-    text-align: center;
-    font-size: 1.1em;
+/* Dark mode styles for mobile menu */
+body.dark-mode .navbar-right {
+    background-color: var(--surface-color);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
 }
 
-#notification-toast.notification-visible {
-    opacity: 1;
-    visibility: visible;
-    transform: translateY(0);
+body.dark-mode .navbar-right .nav-button {
+    color: var(--text-color);
+    border: 1px solid var(--border-color);
+    background-color: var(--background-color);
 }
 
-body.dark-mode #notification-toast {
-    background-color: var(--primary-color);
-    color: var(--button-text-color);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+body.dark-mode .navbar-right .nav-button:hover {
+    background-color: var(--list-item-hover);
+    border-color: var(--primary-color);
 }
 
-/* Badge styles (already provided, ensuring it's here) */
-.requests-badge {
-    position: absolute;
-    top: -8px;
-    right: -8px;
-    background-color: #dc3545;
-    color: white;
-    border-radius: 50%;
-    width: 20px;
-    height: 20px;
-    padding: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 0.7em;
-    font-weight: bold;
-    line-height: 1;
-    transition: background-color 0.3s ease;
+body.dark-mode .navbar-right span {
+    color: var(--text-color);
 }
 
-.requests-badge.hidden {
-    display: none;
+body.dark-mode .navbar-right .friends-list {
+    background-color: var(--background-color);
+    border: 1px solid var(--border-color);
 }
 
-.nav-button {
-    position: relative; /* Essential for absolute badge positioning */
+body.dark-mode .navbar-right .friends-list .list-item {
+    color: var(--text-color);
+    border-bottom-color: var(--border-color);
 }
 
-body.dark-mode .requests-badge {
-    background-color: var(--danger-color);
+body.dark-mode .navbar-right .friends-list .list-item:hover {
+    background-color: var(--list-item-hover);
+}
+
+/* Dark mode adjustments */
+body.dark-mode .navbar-left h2,
+body.dark-mode .navbar-right span,
+body.dark-mode .mobile-only,
+body.dark-mode #friends-nav-button.mobile-only {
+    color: var(--text-color);
+}
+
+body.dark-mode .navbar-right .nav-button,
+body.dark-mode #friends-nav-button.mobile-only {
+     border-color: var(--border-color);
+}
+
+body.dark-mode .navbar-right .nav-button:hover,
+body.dark-mode #friends-nav-button.mobile-only:hover {
+    background-color: var(--list-item-hover);
+    border-color: var(--primary-color);
 }
