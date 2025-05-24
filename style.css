@@ -3,18 +3,18 @@
 /* --- CSS Variables for Theme (Light and Dark) --- */
 :root {
     /* Light Mode Defaults */
-    --background-color: #f0f2f5; 
-    --surface-color: #ffffff; 
+    --background-color: #f0f2f5; /* Global page background */
+    --surface-color: #ffffff; /* Color for cards, chat containers, lists, forms */
     --text-color: #1f2833;
-    --primary-color: #075e54; 
-    --primary-dark-color: #054d44; 
-    --secondary-color: #34b7f1; 
-    --border-color: #cccccc;
-    --light-bubble-color: #dcf8c6; 
-    --received-bubble-color: #ffffff;
-    --button-text-color: white; 
-    --list-item-hover: #e0e0e0; 
-    --sidebar-width: 280px; 
+    --primary-color: #075e54; /* Green for primary actions, navbar */
+    --primary-dark-color: #054d44; /* Darker green for hover */
+    --secondary-color: #34b7f1; /* Blue for secondary actions */
+    --border-color: #cccccc; /* Standard border color */
+    --light-bubble-color: #dcf8c6; /* Light green for chat messages (sent) */
+    --received-bubble-color: #ffffff; /* White for chat messages (received) */
+    --button-text-color: white; /* Text color for primary buttons */
+    --list-item-hover: #e0e0e0; /* Light background on list item hover */
+    --sidebar-width: 280px; /* Width of the sidebar in dashboard */
 }
 
 /* Dark Mode Overrides for CSS Variables */
@@ -41,16 +41,16 @@ body {
     line-height: 1.6;
     min-height: 100vh;
     box-sizing: border-box;
-    transition: background-color 0.3s ease, color 0.3s ease; 
+    transition: background-color 0.3s ease, color 0.3s ease; /* Smooth transition for dark mode */
 }
 
-/* --- Login Page (index.html) --- */
+/* --- Login Page (index.html) Specific Layout --- */
 body.login-page {
-    display: flex; 
-    justify-content: center; 
-    align-items: center; 
-    padding: 20px; 
-    padding-top: 0;
+    display: flex; /* Use flexbox to center content */
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+    padding: 20px; /* Add some padding around the form */
+    padding-top: 0; /* Remove padding-top from body.login-page for centering */
 }
 
 /* Container for Login/Signup Form (specific to index.html) */
@@ -60,7 +60,7 @@ body.login-page .container {
     border-radius: 8px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     width: 100%;
-    max-width: 400px; 
+    max-width: 400px; /* Max width for the form container */
     text-align: center;
     transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
@@ -73,17 +73,31 @@ body.login-page .app-title {
     transition: color 0.3s ease;
 }
 
-/* --- Dashboard Page (menu.html) --- */
+/* Specific input/button styles for login/signup page if needed, otherwise generic apply */
+body.login-page input[type="text"],
+body.login-page input[type="email"],
+body.login-page input[type="password"],
+body.login-page input[type="date"],
+body.login-page select {
+    margin-bottom: 18px; /* Slightly more margin for signup inputs */
+}
+
+body.login-page button[type="submit"] {
+    margin-top: 10px; /* Space above submit button */
+}
+
+
+/* --- Dashboard Page (menu.html) Specific Layout --- */
 body.dashboard-page {
-    padding-top: 60px; 
-    display: flex;
-    flex-direction: column;
+    padding-top: 60px; /* Space for the fixed navbar */
+    display: flex; /* Use flexbox for main content area */
+    flex-direction: column; /* Stack navbar, then dashboard-container */
 }
 
 .dashboard-container {
-    display: flex;
-    flex-grow: 1; 
-    height: calc(100vh - 60px); 
+    display: flex; /* Use flexbox for sidebar and main content */
+    flex-grow: 1; /* Make it fill remaining vertical space */
+    height: calc(100vh - 60px); /* Full height minus navbar height */
 }
 
 /* Sidebar styling */
@@ -101,7 +115,7 @@ body.dashboard-page {
 
 /* Main content area styling */
 .main-content {
-    flex-grow: 1; 
+    flex-grow: 1; /* Take remaining space */
     padding: 15px;
     overflow-y: auto;
     display: flex;
@@ -111,11 +125,12 @@ body.dashboard-page {
     box-sizing: border-box;
 }
 
+/* --- Common UI Components (Used on multiple pages) --- */
 
 /* Navbar styling (for both menu.html and requests.html) */
 .navbar {
     background-color: var(--primary-color);
-    color: var(--button-text-color); /* Use button text color for consistency */
+    color: var(--button-text-color);
     padding: 10px 20px;
     display: flex;
     justify-content: space-between;
@@ -131,6 +146,11 @@ body.dashboard-page {
     transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
 }
 
+.navbar-left {
+    display: flex; /* Ensure hamburger and title align */
+    align-items: center;
+}
+
 .navbar-left h2 {
     margin: 0;
     color: var(--button-text-color);
@@ -143,7 +163,7 @@ body.dashboard-page {
     align-items: center;
 }
 
-.navbar-right span#user-name-display { /* Specificity for username in navbar */
+span#user-name-display { /* Specificity for username in navbar */
     margin-right: 15px;
     font-size: 1.1em;
     font-weight: bold;
@@ -168,7 +188,21 @@ body.dashboard-page {
     background-color: rgba(255, 255, 255, 0.1);
 }
 
-/* Generic input styles (for all pages) */
+/* --- Mobile Specific Navbar Toggle Button --- */
+.mobile-only {
+    display: none; /* Hidden by default on desktop */
+    font-size: 1.5em;
+    padding: 5px 10px;
+    margin-left: 0;
+    margin-right: 10px;
+    border: none;
+}
+body.dashboard-page.dark-mode .mobile-only {
+    color: var(--text-color);
+}
+
+
+/* Generic input styles (for all pages where used, specific overrides later) */
 input[type="text"],
 input[type="email"],
 input[type="password"],
@@ -197,11 +231,11 @@ select {
     background-size: 12px auto;
 }
 body.dark-mode select {
-    background-image: url('data:image/svg+xml;utf8,<svg fill="%23e2e8f0" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/><path d="M0 0h24v24H0z" fill="none"/></svg>'); /* Dark mode SVG for select arrow */
+    background-image: url('data:image/svg+xml;utf8,<svg fill="%23e2e8f0" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/><path d="M0 0h24v24H0z" fill="none"/></svg>');
 }
 
 
-/* Generic button styles (for all pages) */
+/* Generic button styles (for all pages, specific overrides later) */
 button {
     padding: 10px 20px;
     background-color: var(--primary-color);
@@ -225,7 +259,7 @@ button:disabled {
 
 /* General Heading Styles (for all pages) */
 h2, h3, h4 {
-    color: var(--text-color); /* Use text color variable */
+    color: var(--text-color);
     margin-top: 0;
     margin-bottom: 10px;
     transition: color 0.3s ease;
@@ -239,8 +273,8 @@ h2, h3, h4 {
 }
 .search-area input[type="text"] {
     flex-grow: 1;
-    margin-bottom: 0; /* Override default margin */
-    border-radius: 4px; /* Ensure input has full border radius */
+    margin-bottom: 0;
+    border-radius: 4px;
 }
 
 /* --- List Styles (for dashboard lists) --- */
@@ -254,6 +288,7 @@ h2, h3, h4 {
     transition: border-color 0.3s ease, background-color 0.3s ease;
 }
 
+/* --- List Item Styling --- */
 .list-item {
     padding: 10px;
     border-bottom: 1px solid var(--border-color);
@@ -436,7 +471,95 @@ h2, h3, h4 {
 }
 
 
+/* --- Mobile Responsiveness --- */
+/* Hide mobile toggle button by default on larger screens */
+.mobile-only {
+    display: none; /* Hidden by default on desktop */
+}
 
+@media (max-width: 768px) {
+    body.dashboard-page {
+        flex-direction: column; /* Stack navbar, then dashboard-container */
+    }
+
+    .dashboard-container {
+        flex-direction: column; /* Stack sidebar and main content vertically */
+        height: calc(100vh - 60px); /* Fill remaining height */
+    }
+
+    /* Show mobile toggle button */
+    .mobile-only {
+        display: block; /* Make the hamburger icon visible */
+        margin-right: 10px; /* Space between icon and app title */
+    }
+
+    /* Sidebar takes full width on mobile */
+    .sidebar {
+        width: 100%;
+        border-right: none;
+        border-bottom: 1px solid var(--border-color);
+        padding: 10px 15px;
+        /* Initially hide sidebar on mobile */
+        max-height: 0; /* Collapse sidebar */
+        overflow: hidden; /* Hide content that overflows */
+        opacity: 0; /* Make it transparent */
+        transition: max-height 0.3s ease-out, opacity 0.3s ease-out, padding 0.3s ease-out;
+    }
+
+    /* Style for active (shown) sidebar on mobile */
+    .sidebar.active {
+        max-height: 50vh; /* Expand to show content */
+        opacity: 1;
+        overflow-y: auto;
+        padding: 15px;
+    }
+
+    /* Main content takes full width on mobile */
+    .main-content {
+        width: 100%;
+        padding: 15px;
+        flex-grow: 1;
+    }
+
+    /* Adjust navbar elements for mobile */
+    .navbar-right {
+        /* You might want to display this as a dropdown or hide it on mobile */
+        display: none; /* Hide other navbar buttons initially for simplicity */
+    }
+
+    /* Adjust search input and button for mobile */
+    .search-area {
+        flex-wrap: wrap;
+        margin-bottom: 10px;
+    }
+    .search-area input[type="text"] {
+        flex-grow: 1;
+        margin-bottom: 5px;
+    }
+    .search-area button {
+        width: 100%;
+    }
+
+    /* Adjust list item details for smaller screens */
+    .list-item span {
+        font-size: 0.9em;
+    }
+    .list-item button {
+        padding: 4px 8px;
+        font-size: 0.8em;
+    }
+
+    /* Chat bubble adjustments for mobile */
+    .chat-message {
+        max-width: 85%;
+    }
+}
+
+
+/* --- Dark Mode Overrides (General and Specific) --- */
+/* body.dark-mode { */
+    /* Background and text color handled by var() */
+/* } */
 
 /* Login page dark mode */
 body.login-page.dark-mode .container {
@@ -467,6 +590,10 @@ body.dashboard-page.dark-mode .nav-button {
 body.dashboard-page.dark-mode .nav-button:hover {
     background-color: rgba(0, 0, 0, 0.1);
 }
+body.dashboard-page.dark-mode .mobile-only { /* Dark mode for hamburger icon */
+    color: var(--text-color);
+}
+
 
 body.dashboard-page.dark-mode .sidebar {
     background-color: var(--surface-color);
@@ -519,12 +646,12 @@ body.dark-mode .list-item:hover {
 body.dark-mode .list-item .add-button { background-color: var(--primary-color); }
 body.dark-mode .list-item .add-button:hover { background-color: var(--primary-dark-color); }
 body.dark-mode .list-item .chat-button { background-color: var(--secondary-color); }
-body.dark-mode .list-item .chat-button:hover { background-color: #63b3ed; } /* Darker secondary */
+body.dark-mode .list-item .chat-button:hover { background-color: #2b8cdb; }
 body.dark-mode .list-item .accept-button { background-color: var(--success-color); }
 body.dark-mode .list-item .accept-button:hover { background-color: var(--primary-dark-color); }
 body.dark-mode .list-item .reject-button { background-color: var(--danger-color); }
 body.dark-mode .list-item .reject-button:hover { background-color: #e53e3e; }
-body.dark-mode .list-item .cancel-button { background-color: var(--warning-color); color: var(--text-color); } /* Yellow has dark text */
+body.dark-mode .list-item .cancel-button { background-color: var(--warning-color); color: var(--text-color); }
 body.dark-mode .list-item .cancel-button:hover { background-color: #f6e05e; }
 
 
@@ -584,175 +711,66 @@ body.dark-mode .chat-welcome-message {
     color: var(--text-color);
 }
 
-
-
+/* Styles for notification toast */
 #notification-toast {
-    position: fixed; 
-    top: 20px; 
-    right: 20px; 
-    background-color: var(--primary-color); 
-    color: white; /* White text */
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background-color: var(--primary-color);
+    color: white;
     padding: 15px 25px;
     border-radius: 8px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-    z-index: 2000; 
-    opacity: 0; 
-    visibility: hidden; 
-    transform: translateY(-20px); 
+    z-index: 2000;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-20px);
     transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out, visibility 0.5s;
-    min-width: 250px; 
+    min-width: 250px;
     text-align: center;
     font-size: 1.1em;
 }
 
 #notification-toast.notification-visible {
-    opacity: 1; /* Fully visible */
-    visibility: visible; /* Visible to screen readers and interaction */
-    transform: translateY(0); /* Slide down to final position */
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
 }
 
-/* Dark mode for notification */
 body.dark-mode #notification-toast {
-    background-color: var(--primary-color); /* Uses dark mode primary color */
-    color: var(--button-text-color); /* Uses dark mode button text color */
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5); /* Darker shadow in dark mode */
+    background-color: var(--primary-color);
+    color: var(--button-text-color);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
 }
 
-
-
-/* Styling for the Requests Badge */
+/* Badge styles (already provided, ensuring it's here) */
 .requests-badge {
     position: absolute;
-    top: -8px; /* Adjust vertical position */
-    right: -8px; /* Adjust horizontal position */
-    background-color: #dc3545; /* Red background for new notifications */
-    color: white; /* White text */
-    border-radius: 50%; /* Make it circular */
-
-    /* --- Changes for perfect circle and centering --- */
-    width: 20px; /* Explicit width */
-    height: 20px; /* Explicit height, equal to width */
-    padding: 0; /* Remove padding to make width/height exact for circle */
-    display: flex; /* Use flexbox to center content */
-    justify-content: center; /* Center horizontally */
-    align-items: center; /* Center vertically */
-    /* --- End changes --- */
-
-    font-size: 0.7em; /* Smaller font size */
+    top: -8px;
+    right: -8px;
+    background-color: #dc3545;
+    color: white;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 0.7em;
     font-weight: bold;
-    /* min-width: 18px; // Removed as width/height are explicit now */
-    text-align: center; /* Redundant with flexbox centering, but harmless */
-    line-height: 1; /* Adjust line-height to help with vertical alignment if needed */
-    transition: background-color 0.3s ease; /* Smooth transition */
+    line-height: 1;
+    transition: background-color 0.3s ease;
 }
-
-/* Ensure the parent button is positioned relatively for absolute badge positioning */
-.nav-button {
-    position: relative; /* Add this if not already present, for badge positioning */
-    /* Other nav-button styles */
-}
-
 
 .requests-badge.hidden {
     display: none;
 }
 
+.nav-button {
+    position: relative; /* Essential for absolute badge positioning */
+}
 
 body.dark-mode .requests-badge {
-    background-color: var(--danger-color); 
-}
-
-
-
-.mobile-only {
-    display: none;
-}
-
-@media (max-width: 768px) {
-    body.dashboard-page {
-        padding-top: 60px;
-        flex-direction: column; 
-    }
-
-    .dashboard-container {
-        flex-direction: column; 
-        height: calc(100vh - 60px); 
-    }
-
-  
-    .mobile-only {
-        display: block; 
-        margin-right: 10px; 
-    }
-
-    .navbar-left {
-        display: flex; 
-        align-items: center;
-    }
-
-   
-    .sidebar {
-        width: 100%;
-        border-right: none; 
-        border-bottom: 1px solid var(--border-color);
-        padding: 10px 15px;
-        max-height: 0;
-        overflow: hidden;
-        opacity: 0;
-        transition: max-height 0.3s ease-out, opacity 0.3s ease-out, padding 0.3s ease-out;
-    }
-
-  
-    .sidebar.active {
-        max-height: 50vh; 
-        opacity: 1;
-        overflow-y: auto;
-        padding: 15px;
-    }
-
-    
-    .main-content {
-        width: 100%;
-        padding: 15px;
-        flex-grow: 1; 
-    }
-
-    
-    .navbar-right {
-        display: none; 
-    }
-
- 
-    .search-area {
-        flex-wrap: wrap; 
-        margin-bottom: 10px;
-    }
-    .search-area input[type="text"] {
-        flex-grow: 1; 
-        margin-bottom: 5px;
-    }
-    .search-area button {
-        width: 100%; 
-    }
-
-   
-    .list-item span {
-        font-size: 0.9em;
-    }
-    .list-item button {
-        padding: 4px 8px;
-        font-size: 0.8em;
-    }
-
-
-    .chat-message {
-        max-width: 85%; 
-    }
-}
-
-
-@media (max-width: 768px) {
-    body.dark-mode .sidebar {
-        border-bottom-color: var(--border-color);
-    }
+    background-color: var(--danger-color);
 }
