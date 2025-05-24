@@ -32,25 +32,35 @@ const sendButton = document.getElementById('send-message-button');
 
 // Get reference to the requests navigation button (from menu.html navbar)
 const requestsNavButton = document.getElementById('requests-nav-button');
-// *** Get reference to the requests badge element ***
+
+// Get reference to the requests badge element
 const requestsBadge = document.getElementById('requests-badge');
+
+// *** Get reference to the mobile menu toggle button ***
+const mobileMenuToggle = document.getElementById('mobile-menu-toggle');
 
 
 let currentUser = null;
 let currentUserFriends = [];
 
 
-// Variables for chat state
 let currentChatId = null;
 let unsubscribeMessages = null;
 
 
-// Debounce variables for live search
 let searchTimeout = null;
 const DEBOUNCE_DELAY = 300;
 
 
-// --- Functions at the top level ---
+// --- Functions ---
+
+// Function to show/hide the sidebar on mobile
+function toggleSidebar() {
+    const sidebar = document.querySelector('.sidebar');
+    if (sidebar) {
+        sidebar.classList.toggle('active');
+    }
+}
 
 // Function to fetch and display user data
 async function fetchAndDisplayUserData(uid) {
@@ -164,6 +174,11 @@ async function performSearch(searchTerm) {
                 const friendName = event.target.closest('.list-item').querySelector('strong').textContent;
                 console.log("Chat button clicked for friend UID:", friendUid);
                 initiateChat(friendUid, friendName);
+                // On mobile, hide sidebar when chat is initiated
+                const sidebar = document.querySelector('.sidebar');
+                if (sidebar && sidebar.classList.contains('active')) {
+                    sidebar.classList.remove('active');
+                }
             });
         });
 
@@ -199,14 +214,14 @@ function setupRealtimeListeners(uid) {
         console.error("Error listening to friends:", error);
     });
 
-    // *** Listener for Incoming Friend Request Badge (on menu.js) ***
+    // Listener for Incoming Friend Request Badge (on menu.js)
     const incomingRequestsBadgeQuery = query(collection(db, 'friendRequests'),
         where('to', '==', uid),
         where('status', '==', 'pending')
     );
     onSnapshot(incomingRequestsBadgeQuery, (snapshot) => {
         const pendingCount = snapshot.size;
-        if (requestsBadge) { // Ensure badge element exists
+        if (requestsBadge) {
             requestsBadge.textContent = pendingCount;
             if (pendingCount > 0) {
                 requestsBadge.classList.remove('hidden');
@@ -217,7 +232,7 @@ function setupRealtimeListeners(uid) {
     }, (error) => {
         console.error("Error listening to incoming requests for badge:", error);
         if (requestsBadge) {
-             requestsBadge.classList.add('hidden'); // Hide badge on error
+             requestsBadge.classList.add('hidden');
         }
     });
 }
@@ -268,6 +283,11 @@ async function displayFriends(friends) {
         friendItem.addEventListener('click', () => {
             console.log("Friend clicked:", friend.uid);
             initiateChat(friend.uid, friendData[friend.uid]?.name || 'User');
+            // On mobile, hide sidebar when chat is initiated
+            const sidebar = document.querySelector('.sidebar');
+            if (sidebar && sidebar.classList.contains('active')) {
+                sidebar.classList.remove('active');
+            }
         });
         friendsListDiv.appendChild(friendItem);
     });
@@ -306,6 +326,7 @@ function displayMessages(messageDocs, friendName) {
         } else {
              messageElement.innerHTML = `<p>[File message type not supported]</p>`;
         }
+
 
         if (message.timestamp) {
             const timestamp = message.timestamp.toDate();
@@ -346,7 +367,6 @@ async function sendMessage() {
         console.error("Error sending message:", error);
     }
 }
-
 
 // Function to initiate a chat with a friend
 async function initiateChat(friendUid, friendName) {
@@ -417,6 +437,7 @@ onAuthStateChanged(auth, (user) => {
         setupRealtimeListeners(currentUser.uid); // Sets up listeners for friends and badge
         setupLiveSearch();
 
+        // Show default chat state or a message (e.g., "Select a friend to chat")
         chatFriendNameDisplay.textContent = "Select a friend to chat";
         chatMessagesListDiv.innerHTML = '<p class="empty-state">No conversation selected.</p>';
 
@@ -429,6 +450,7 @@ onAuthStateChanged(auth, (user) => {
 
 
 // --- Other General Event Listeners ---
+// These are attached once the DOM is ready
 
 // Theme switch button listener
 themeSwitchButton.addEventListener('click', () => {

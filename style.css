@@ -3,18 +3,18 @@
 /* --- CSS Variables for Theme (Light and Dark) --- */
 :root {
     /* Light Mode Defaults */
-    --background-color: #f0f2f5; /* Global page background */
-    --surface-color: #ffffff; /* Color for cards, chat containers, lists, forms */
+    --background-color: #f0f2f5; 
+    --surface-color: #ffffff; 
     --text-color: #1f2833;
-    --primary-color: #075e54; /* Green for primary actions, navbar */
-    --primary-dark-color: #054d44; /* Darker green for hover */
-    --secondary-color: #34b7f1; /* Blue for secondary actions */
-    --border-color: #cccccc; /* Standard border color */
-    --light-bubble-color: #dcf8c6; /* Light green for chat messages (sent) */
-    --received-bubble-color: #ffffff; /* White for chat messages (received) */
-    --button-text-color: white; /* Text color for primary buttons */
-    --list-item-hover: #e0e0e0; /* Light background on list item hover */
-    --sidebar-width: 280px; /* Width of the sidebar in dashboard */
+    --primary-color: #075e54; 
+    --primary-dark-color: #054d44; 
+    --secondary-color: #34b7f1; 
+    --border-color: #cccccc;
+    --light-bubble-color: #dcf8c6; 
+    --received-bubble-color: #ffffff;
+    --button-text-color: white; 
+    --list-item-hover: #e0e0e0; 
+    --sidebar-width: 280px; 
 }
 
 /* Dark Mode Overrides for CSS Variables */
@@ -41,16 +41,16 @@ body {
     line-height: 1.6;
     min-height: 100vh;
     box-sizing: border-box;
-    transition: background-color 0.3s ease, color 0.3s ease; /* Smooth transition for dark mode */
+    transition: background-color 0.3s ease, color 0.3s ease; 
 }
 
-/* --- Login Page (index.html) Specific Layout --- */
+/* --- Login Page (index.html) --- */
 body.login-page {
-    display: flex; /* Use flexbox to center content */
-    justify-content: center; /* Center horizontally */
-    align-items: center; /* Center vertically */
-    padding: 20px; /* Add some padding around the form */
-    padding-top: 0; /* Remove padding-top from body.login-page */
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
+    padding: 20px; 
+    padding-top: 0;
 }
 
 /* Container for Login/Signup Form (specific to index.html) */
@@ -60,7 +60,7 @@ body.login-page .container {
     border-radius: 8px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     width: 100%;
-    max-width: 400px; /* Max width for the form container */
+    max-width: 400px; 
     text-align: center;
     transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
@@ -73,17 +73,17 @@ body.login-page .app-title {
     transition: color 0.3s ease;
 }
 
-/* --- Dashboard Page (menu.html) Specific Layout --- */
+/* --- Dashboard Page (menu.html) --- */
 body.dashboard-page {
-    padding-top: 60px; /* Space for the fixed navbar */
-    display: flex; /* Use flexbox for sidebar and main content */
-    flex-direction: column; /* Stack navbar, then dashboard-container */
+    padding-top: 60px; 
+    display: flex;
+    flex-direction: column;
 }
 
 .dashboard-container {
-    display: flex; /* Use flexbox for sidebar and main content */
-    flex-grow: 1; /* Make it fill remaining vertical space */
-    height: calc(100vh - 60px); /* Full height minus navbar height */
+    display: flex;
+    flex-grow: 1; 
+    height: calc(100vh - 60px); 
 }
 
 /* Sidebar styling */
@@ -101,7 +101,7 @@ body.dashboard-page {
 
 /* Main content area styling */
 .main-content {
-    flex-grow: 1; /* Take remaining space */
+    flex-grow: 1; 
     padding: 15px;
     overflow-y: auto;
     display: flex;
@@ -111,7 +111,6 @@ body.dashboard-page {
     box-sizing: border-box;
 }
 
-/* --- Common UI Components (Used on multiple pages) --- */
 
 /* Navbar styling (for both menu.html and requests.html) */
 .navbar {
@@ -588,20 +587,20 @@ body.dark-mode .chat-welcome-message {
 
 
 #notification-toast {
-    position: fixed; /* Fixed position so it stays in place */
-    top: 20px; /* Distance from top */
-    right: 20px; /* Distance from right */
-    background-color: var(--primary-color); /* Primary color background */
+    position: fixed; 
+    top: 20px; 
+    right: 20px; 
+    background-color: var(--primary-color); 
     color: white; /* White text */
     padding: 15px 25px;
     border-radius: 8px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-    z-index: 2000; /* Ensure it's on top of everything */
-    opacity: 0; /* Initially hidden (transparent) */
-    visibility: hidden; /* Hidden from screen readers and interaction initially */
-    transform: translateY(-20px); /* Start slightly above the final position */
-    transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out, visibility 0.5s; /* Smooth animation */
-    min-width: 250px; /* Ensure it's wide enough */
+    z-index: 2000; 
+    opacity: 0; 
+    visibility: hidden; 
+    transform: translateY(-20px); 
+    transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out, visibility 0.5s;
+    min-width: 250px; 
     text-align: center;
     font-size: 1.1em;
 }
@@ -653,12 +652,107 @@ body.dark-mode #notification-toast {
     /* Other nav-button styles */
 }
 
-/* Rule to hide the badge when it has the 'hidden' class */
+
 .requests-badge.hidden {
     display: none;
 }
 
-/* Dark mode for badge */
+
 body.dark-mode .requests-badge {
-    background-color: var(--danger-color); /* Use dark mode danger color */
+    background-color: var(--danger-color); 
+}
+
+
+
+.mobile-only {
+    display: none;
+}
+
+@media (max-width: 768px) {
+    body.dashboard-page {
+        padding-top: 60px;
+        flex-direction: column; 
+    }
+
+    .dashboard-container {
+        flex-direction: column; 
+        height: calc(100vh - 60px); 
+    }
+
+  
+    .mobile-only {
+        display: block; 
+        margin-right: 10px; 
+    }
+
+    .navbar-left {
+        display: flex; 
+        align-items: center;
+    }
+
+   
+    .sidebar {
+        width: 100%;
+        border-right: none; 
+        border-bottom: 1px solid var(--border-color);
+        padding: 10px 15px;
+        max-height: 0;
+        overflow: hidden;
+        opacity: 0;
+        transition: max-height 0.3s ease-out, opacity 0.3s ease-out, padding 0.3s ease-out;
+    }
+
+  
+    .sidebar.active {
+        max-height: 50vh; 
+        opacity: 1;
+        overflow-y: auto;
+        padding: 15px;
+    }
+
+    
+    .main-content {
+        width: 100%;
+        padding: 15px;
+        flex-grow: 1; 
+    }
+
+    
+    .navbar-right {
+        display: none; 
+    }
+
+ 
+    .search-area {
+        flex-wrap: wrap; 
+        margin-bottom: 10px;
+    }
+    .search-area input[type="text"] {
+        flex-grow: 1; 
+        margin-bottom: 5px;
+    }
+    .search-area button {
+        width: 100%; 
+    }
+
+   
+    .list-item span {
+        font-size: 0.9em;
+    }
+    .list-item button {
+        padding: 4px 8px;
+        font-size: 0.8em;
+    }
+
+
+    .chat-message {
+        max-width: 85%; 
+    }
+}
+
+
+@media (max-width: 768px) {
+    body.dark-mode .sidebar {
+        border-bottom-color: var(--border-color);
+    }
 }
