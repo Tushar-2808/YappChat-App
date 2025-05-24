@@ -38,6 +38,7 @@ const requestsBadge = document.getElementById('requests-badge');
 
 // *** Get reference to the mobile menu toggle button ***
 const mobileMenuToggle = document.getElementById('mobile-menu-toggle');
+console.log("Mobile Menu Toggle Element:", mobileMenuToggle);
 
 
 let currentUser = null;
@@ -56,6 +57,7 @@ const DEBOUNCE_DELAY = 300;
 
 // Function to show/hide the sidebar on mobile
 function toggleSidebar() {
+    console.log('Toggle sidebar clicked!');
     const sidebar = document.querySelector('.sidebar');
     if (sidebar) {
         sidebar.classList.toggle('active');
